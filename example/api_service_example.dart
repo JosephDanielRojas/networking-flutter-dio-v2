@@ -1,12 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:networking_flutter_dio_v2/networking_flutter_dio_v2.dart';
+import 'package:networking_flutter_dio_v2/core/interceptors/custom_exception_extensions.dart';
 
-/// Ejemplo de uso de ApiService con Response<dynamic> de Dio
-/// Completamente flexible para cualquier tipo de API
+
 void main() async {
-  // ============================================
-  // Configuración inicial
-  // ============================================
 
   final dio = Dio(
     BaseOptions(
@@ -26,10 +23,7 @@ void main() async {
   final dioService = DioService(dioClient: dio);
   final apiService = ApiService(dioService);
 
-  // ============================================
-  // Ejemplo 1: GET - Respuesta directa (sin wrapper)
-  // ============================================
-
+  
   try {
     final user = await apiService.getDocumentData<Map<String, dynamic>>(
       endpoint: '/users/1',
@@ -49,9 +43,6 @@ void main() async {
     print('Error: ${e.message} (${e.statusCode})');
   }
 
-  // ============================================
-  // Ejemplo 2: GET - Respuesta con estructura anidada
-  // ============================================
 
   try {
     // API que retorna: { "success": true, "data": {...}, "message": "OK" }
@@ -76,10 +67,7 @@ void main() async {
     print('Error: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 3: GET Collection - Lista directa
-  // ============================================
-
+  
   try {
     final users = await apiService.getCollectionData<Map<String, dynamic>>(
       endpoint: '/users',
@@ -100,10 +88,7 @@ void main() async {
     print('Error: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 4: GET Collection - Lista anidada
-  // ============================================
-
+  
   try {
     // API que retorna: { "data": [...], "total": 10, "page": 1 }
     final users = await apiService.getCollectionData<Map<String, dynamic>>(
@@ -125,10 +110,6 @@ void main() async {
     print('Error: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 5: POST - Crear recurso
-  // ============================================
-
   try {
     final newPost = await apiService.postData<Map<String, dynamic>>(
       endpoint: '/posts',
@@ -149,10 +130,6 @@ void main() async {
     print('Error al crear: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 6: PUT - Actualizar completo
-  // ============================================
-
   try {
     final updatedPost = await apiService.putData<Map<String, dynamic>>(
       endpoint: '/posts/1',
@@ -171,10 +148,6 @@ void main() async {
     print('Error al actualizar: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 7: PATCH - Actualización parcial
-  // ============================================
-
   try {
     final patchedPost = await apiService.patchData<Map<String, dynamic>>(
       endpoint: '/posts/1',
@@ -189,10 +162,6 @@ void main() async {
   } on CustomException catch (e) {
     print('Error al parchear: ${e.message}');
   }
-
-  // ============================================
-  // Ejemplo 8: DELETE - Eliminar recurso
-  // ============================================
 
   try {
     final result = await apiService.deleteData<Map<String, dynamic>>(
@@ -211,9 +180,6 @@ void main() async {
     print('Error al eliminar: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 9: Convertir a modelos personalizados
-  // ============================================
 
   try {
     final users = await apiService.getCollectionData<User>(
@@ -233,10 +199,6 @@ void main() async {
     print('Error: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 10: Headers personalizados
-  // ============================================
-
   try {
     final data = await apiService.getDocumentData<Map<String, dynamic>>(
       endpoint: '/posts/1',
@@ -252,10 +214,6 @@ void main() async {
   } on CustomException catch (e) {
     print('Error: ${e.message}');
   }
-
-  // ============================================
-  // Ejemplo 11: Query parameters complejos
-  // ============================================
 
   try {
     final posts = await apiService.getCollectionData<Map<String, dynamic>>(
@@ -278,10 +236,6 @@ void main() async {
   } on CustomException catch (e) {
     print('Error: ${e.message}');
   }
-
-  // ============================================
-  // Ejemplo 12: Manejo de errores por statusCode
-  // ============================================
 
   try {
     final data = await apiService.getDocumentData<Map<String, dynamic>>(
@@ -323,10 +277,6 @@ void main() async {
     print('Error inesperado: $e');
   }
 
-  // ============================================
-  // Ejemplo 13: Upload con progreso
-  // ============================================
-
   try {
     final result = await apiService.postData<Map<String, dynamic>>(
       endpoint: '/upload',
@@ -353,10 +303,6 @@ void main() async {
     print('Error al subir: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 14: API con múltiples niveles de anidación
-  // ============================================
-
   try {
     // API retorna: { "response": { "body": { "data": {...} } } }
     final data = await apiService.getDocumentData<Map<String, dynamic>>(
@@ -377,10 +323,6 @@ void main() async {
     print('Error: ${e.message}');
   }
 
-  // ============================================
-  // Ejemplo 15: Uso con autenticación dinámica
-  // ============================================
-
   try {
     // Obtener datos protegidos
     final protectedData = await apiService.getDocumentData<Map<String, dynamic>>(
@@ -399,10 +341,6 @@ void main() async {
     }
   }
 }
-
-// ============================================
-// Modelo de ejemplo
-// ============================================
 
 class User {
   final int id;

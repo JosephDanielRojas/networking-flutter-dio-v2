@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import '../interceptors/custom_exception.dart';
+import '../interceptors/custom_exception_factories.dart';
 
 /// Cliente HTTP simple que utiliza Dio
 ///
 /// Retorna Response<dynamic> directo de Dio - sin estructuras predefinidas
 class ApiClient {
   final Dio _dio;
+  final List<String> _messageKeys;
 
   ApiClient({
     required String baseUrl,
@@ -13,21 +15,26 @@ class ApiClient {
     Duration? connectTimeout,
     Duration? receiveTimeout,
     List<Interceptor>? interceptors,
-  }) : _dio = Dio(
+    List<String> messageKeys = const ['message', 'error', 'msg', 'detail'],
+  })  : _dio = Dio(
           BaseOptions(
             baseUrl: baseUrl,
             headers: headers ?? {'Content-Type': 'application/json'},
             connectTimeout: connectTimeout ?? const Duration(seconds: 30),
             receiveTimeout: receiveTimeout ?? const Duration(seconds: 30),
           ),
-        ) {
+        ),
+        _messageKeys = messageKeys {
     if (interceptors != null) {
       _dio.interceptors.addAll(interceptors);
     }
   }
 
   /// Constructor que permite inyectar una instancia de Dio (útil para testing)
-  ApiClient.fromDio(this._dio);
+  ApiClient.fromDio(
+    this._dio, {
+    List<String> messageKeys = const ['message', 'error', 'msg', 'detail'],
+  }) : _messageKeys = messageKeys;
 
   /// Getter para acceder a la instancia de Dio
   Dio get dio => _dio;
@@ -45,9 +52,9 @@ class ApiClient {
         options: options,
       );
     } on DioException catch (e) {
-      throw CustomException.fromDioException(e);
+      throw CustomExceptionFactories.fromDioException(e, messageKeys: _messageKeys);
     } catch (e) {
-      throw CustomException.fromDioException(Exception(e));
+      throw CustomExceptionFactories.fromDioException(Exception(e), messageKeys: _messageKeys);
     }
   }
 
@@ -66,9 +73,9 @@ class ApiClient {
         options: options,
       );
     } on DioException catch (e) {
-      throw CustomException.fromDioException(e);
+      throw CustomExceptionFactories.fromDioException(e, messageKeys: _messageKeys);
     } catch (e) {
-      throw CustomException.fromDioException(Exception(e));
+      throw CustomExceptionFactories.fromDioException(Exception(e), messageKeys: _messageKeys);
     }
   }
 
@@ -87,9 +94,9 @@ class ApiClient {
         options: options,
       );
     } on DioException catch (e) {
-      throw CustomException.fromDioException(e);
+      throw CustomExceptionFactories.fromDioException(e, messageKeys: _messageKeys);
     } catch (e) {
-      throw CustomException.fromDioException(Exception(e));
+      throw CustomExceptionFactories.fromDioException(Exception(e), messageKeys: _messageKeys);
     }
   }
 
@@ -108,9 +115,9 @@ class ApiClient {
         options: options,
       );
     } on DioException catch (e) {
-      throw CustomException.fromDioException(e);
+      throw CustomExceptionFactories.fromDioException(e, messageKeys: _messageKeys);
     } catch (e) {
-      throw CustomException.fromDioException(Exception(e));
+      throw CustomExceptionFactories.fromDioException(Exception(e), messageKeys: _messageKeys);
     }
   }
 
@@ -129,9 +136,9 @@ class ApiClient {
         options: options,
       );
     } on DioException catch (e) {
-      throw CustomException.fromDioException(e);
+      throw CustomExceptionFactories.fromDioException(e, messageKeys: _messageKeys);
     } catch (e) {
-      throw CustomException.fromDioException(Exception(e));
+      throw CustomExceptionFactories.fromDioException(Exception(e), messageKeys: _messageKeys);
     }
   }
 }

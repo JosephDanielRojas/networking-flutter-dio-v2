@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart';
 import '../helper/typedefs.dart';
 import '../interceptors/custom_exception.dart';
+import '../interceptors/custom_exception_factories.dart';
 import 'api_interface.dart';
 import 'dio_service.dart';
 
-/// Servicio de API completamente flexible
-///
-/// Trabaja directamente con Response de Dio - el usuario tiene control total
-/// sobre cómo parsear requests y responses
 class ApiService implements ApiInterface {
-  ApiService(DioService dioService) : _dioService = dioService;
+  ApiService(
+    DioService dioService, {
+    List<String> messageKeys = const ['message', 'error', 'msg', 'detail'],
+  })  : _dioService = dioService,
+        _messageKeys = messageKeys;
 
   final DioService _dioService;
+  final List<String> _messageKeys;
 
   @override
   Future<T> deleteData<T>({
@@ -37,9 +39,9 @@ class ApiService implements ApiInterface {
 
       return converter(response);
     } on DioException catch (ex) {
-      throw CustomException.fromDioException(ex);
+      throw CustomExceptionFactories.fromDioException(ex, messageKeys: _messageKeys);
     } catch (ex) {
-      throw CustomException.fromDioException(Exception(ex));
+      throw CustomExceptionFactories.fromDioException(Exception(ex), messageKeys: _messageKeys);
     }
   }
 
@@ -65,9 +67,9 @@ class ApiService implements ApiInterface {
 
       return converter(response);
     } on DioException catch (ex) {
-      throw CustomException.fromDioException(ex);
+      throw CustomExceptionFactories.fromDioException(ex, messageKeys: _messageKeys);
     } catch (ex) {
-      throw CustomException.fromDioException(Exception(ex));
+      throw CustomExceptionFactories.fromDioException(Exception(ex), messageKeys: _messageKeys);
     }
   }
 
@@ -93,9 +95,9 @@ class ApiService implements ApiInterface {
 
       return converter(response);
     } on DioException catch (ex) {
-      throw CustomException.fromDioException(ex);
+      throw CustomExceptionFactories.fromDioException(ex, messageKeys: _messageKeys);
     } catch (ex) {
-      throw CustomException.fromDioException(Exception(ex));
+      throw CustomExceptionFactories.fromDioException(Exception(ex), messageKeys: _messageKeys);
     }
   }
 
@@ -125,9 +127,9 @@ class ApiService implements ApiInterface {
 
       return converter(response);
     } on DioException catch (ex) {
-      throw CustomException.fromDioException(ex);
+      throw CustomExceptionFactories.fromDioException(ex, messageKeys: _messageKeys);
     } catch (ex) {
-      throw CustomException.fromDioException(Exception(ex));
+      throw CustomExceptionFactories.fromDioException(Exception(ex), messageKeys: _messageKeys);
     }
   }
 
@@ -155,9 +157,9 @@ class ApiService implements ApiInterface {
 
       return converter(response);
     } on DioException catch (ex) {
-      throw CustomException.fromDioException(ex);
+      throw CustomExceptionFactories.fromDioException(ex, messageKeys: _messageKeys);
     } catch (ex) {
-      throw CustomException.fromDioException(Exception(ex));
+      throw CustomExceptionFactories.fromDioException(Exception(ex), messageKeys: _messageKeys);
     }
   }
 
@@ -185,9 +187,9 @@ class ApiService implements ApiInterface {
 
       return converter(response);
     } on DioException catch (ex) {
-      throw CustomException.fromDioException(ex);
+      throw CustomExceptionFactories.fromDioException(ex, messageKeys: _messageKeys);
     } catch (ex) {
-      throw CustomException.fromDioException(Exception(ex));
+      throw CustomExceptionFactories.fromDioException(Exception(ex), messageKeys: _messageKeys);
     }
   }
 }

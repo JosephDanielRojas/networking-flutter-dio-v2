@@ -4,6 +4,9 @@ analyzer:
     unintended_html_in_doc_comment: ignore
     file_names: ignore
     avoid_print: ignore
+    unused_local_variable: ignore
+    unused_import: ignore
+    unnecessary_library_name: ignore
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
