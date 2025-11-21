@@ -15,6 +15,37 @@ class ApiService implements ApiInterface {
   final DioService _dioService;
   final List<String> _messageKeys;
 
+  /// Getter para acceder a la instancia de Dio
+  Dio get dio => _dioService.dio;
+
+  /// Getter para obtener la baseUrl actual
+  String get baseUrl => _dioService.dio.options.baseUrl;
+
+  /// Getter para obtener los headers actuales
+  Map<String, dynamic> get headers => _dioService.dio.options.headers;
+
+  /// Setter para cambiar la baseUrl
+  set baseUrl(String url) => _dioService.dio.options.baseUrl = url;
+
+  /// Setter para cambiar los headers (reemplaza todos)
+  set headers(Map<String, dynamic> newHeaders) =>
+      _dioService.dio.options.headers = newHeaders;
+
+  /// Agrega o actualiza un header específico
+  void setHeader(String key, dynamic value) {
+    _dioService.dio.options.headers[key] = value;
+  }
+
+  /// Elimina un header específico
+  void removeHeader(String key) {
+    _dioService.dio.options.headers.remove(key);
+  }
+
+  /// Actualiza múltiples headers (merge con los existentes)
+  void updateHeaders(Map<String, dynamic> newHeaders) {
+    _dioService.dio.options.headers.addAll(newHeaders);
+  }
+
   @override
   Future<T> deleteData<T>({
     required String endpoint,
