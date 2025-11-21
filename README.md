@@ -19,7 +19,8 @@ Agrega la dependencia en tu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  networking_flutter_dio_v2: ^0.0.1
+  networking_flutter_dio_v2:
+    git:"https://github.com/JosephDanielRojas/networking-flutter-dio-v2.git"
 ```
 
 ## Uso Básico
