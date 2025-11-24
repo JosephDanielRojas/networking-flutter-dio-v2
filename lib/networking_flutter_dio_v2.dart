@@ -18,3 +18,4 @@ export 'core/interceptors/exception_type.dart';
 
 // Helpers
 export 'core/helper/typedefs.dart';
+export 'core/helper/response_extensions.dart';
