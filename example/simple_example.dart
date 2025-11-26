@@ -10,28 +10,25 @@ void main() async {
 
   print('=== Ejemplo con ApiClient ===\n');
 
-  final apiClient = ApiClient(
-    baseUrl: 'https://jsonplaceholder.typicode.com',
-    interceptors: [
-      LoggingInterceptor(),
-    ],
-  );
+  final dio = Dio(BaseOptions(baseUrl: 'https://jsonplaceholder.typicode.com'));
+  dio.interceptors.add(LoggingInterceptor());
+
+  final apiClient = ApiClient(DioService(dioClient: dio));
 
   try {
-    // GET - Retorna Response<dynamic> de Dio
-    final response = await apiClient.get(endpoint: '/users/1');
+    // GET - Retorna tipo T directamente
+    final user = await apiClient.get<Map<String, dynamic>>(endpoint: '/users/1');
 
-    // Acceso directo a los datos de Dio
-    print('Status: ${response.statusCode}');
-    print('Usuario: ${response.data['name']}');
-    print('Email: ${response.data['email']}\n');
+    // Acceso directo a los datos
+    print('Usuario: ${user['name']}');
+    print('Email: ${user['email']}\n');
   } on CustomException catch (e) {
     print('Error: ${e.message}\n');
   }
 
   try {
-    // POST - Retorna Response<dynamic> de Dio
-    final response = await apiClient.post(
+    // POST - Retorna tipo T directamente
+    final newPost = await apiClient.post<Map<String, dynamic>>(
       endpoint: '/posts',
       data: {
         'title': 'Mi nuevo post',
@@ -40,8 +37,7 @@ void main() async {
       },
     );
 
-    print('Post creado - Status: ${response.statusCode}');
-    print('ID del post: ${response.data['id']}\n');
+    print('Post creado - ID: ${newPost['id']}\n');
   } on CustomException catch (e) {
     print('Error: ${e.message}\n');
   }
@@ -52,7 +48,7 @@ void main() async {
 
   print('=== Ejemplo con ApiService ===\n');
 
-  final dio = Dio(
+  final dioForService = Dio(
     BaseOptions(
       baseUrl: 'https://jsonplaceholder.typicode.com',
       connectTimeout: const Duration(seconds: 30),
@@ -60,9 +56,9 @@ void main() async {
     ),
   );
 
-  dio.interceptors.add(LoggingInterceptor());
+  dioForService.interceptors.add(LoggingInterceptor());
 
-  final dioService = DioService(dioClient: dio);
+  final dioService = DioService(dioClient: dioForService);
   final apiService = ApiService(dioService);
 
   try {
@@ -138,13 +134,12 @@ void main() async {
   // ============================================
 
   try {
-    final response = await apiClient.get(
+    final post = await apiClient.get<Map<String, dynamic>>(
       endpoint: '/posts/1',
       queryParameters: {'_embed': 'comments'},
     );
 
-    print('Post con headers: ${response.data['title']}');
-    print('Status: ${response.statusCode}');
+    print('Post: ${post['title']}');
   } on CustomException catch (e) {
     print('Error: ${e.message}');
   }

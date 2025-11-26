@@ -17,14 +17,13 @@ void main() async {
   print('│ EJEMPLO 1: API estándar con campo "message"            │');
   print('└─────────────────────────────────────────────────────────┘\n');
 
-  final apiClient1 = ApiClient(
-    baseUrl: 'https://jsonplaceholder.typicode.com',
-    // messageKeys por defecto: ['message', 'error', 'msg', 'detail']
-  );
+  final dio1 = Dio(BaseOptions(baseUrl: 'https://jsonplaceholder.typicode.com'));
+  final apiClient1 = ApiClient(DioService(dioClient: dio1));
+  // messageKeys por defecto: ['message', 'error', 'msg', 'detail']
 
   try {
     print('➤ Intentando acceder a un recurso inexistente...\n');
-    await apiClient1.get(endpoint: '/posts/99999');
+    await apiClient1.get<Map<String, dynamic>>(endpoint: '/posts/99999');
   } on CustomException catch (e) {
     print('✓ Error capturado:');
     print('  Mensaje extraído: ${e.message}');
@@ -46,8 +45,9 @@ void main() async {
   print('    "statusCode": 404');
   print('  }\n');
 
+  final dio2 = Dio(BaseOptions(baseUrl: 'https://api.example.com'));
   final apiClient2 = ApiClient(
-    baseUrl: 'https://api.example.com',
+    DioService(dioClient: dio2),
     messageKeys: ['errorMessage', 'errorDesc', 'message'], // ← Personalizado
   );
 
@@ -67,8 +67,9 @@ void main() async {
   print('  Formato 3: {"errorDescription": "Permission denied"}');
   print('  Formato 4: {"detail": "Resource unavailable"}\n');
 
+  final dio3 = Dio(BaseOptions(baseUrl: 'https://api.example.com'));
   final apiClient3 = ApiClient(
-    baseUrl: 'https://api.example.com',
+    DioService(dioClient: dio3),
     messageKeys: [
       'errorDescription', // Buscar primero aquí
       'error',            // Luego aquí
@@ -132,8 +133,9 @@ void main() async {
   print('    "code": 409');
   print('  }\n');
 
+  final dio4 = Dio(BaseOptions(baseUrl: 'https://mi-api.com'));
   final apiClient4 = ApiClient(
-    baseUrl: 'https://mi-api.com',
+    DioService(dioClient: dio4),
     messageKeys: ['description', 'message'], // ← "description" primero
   );
 

@@ -2,20 +2,11 @@
 import 'package:dio/dio.dart';
 import '../helper/typedefs.dart';
 
-/// Interfaz para el servicio de API
-///
-/// Define los métodos básicos que debe implementar cualquier servicio de API
-/// Trabaja directamente con Response<dynamic> de Dio para máxima flexibilidad
 abstract class ApiInterface {
   const ApiInterface();
 
   /// Elimina un recurso (DELETE)
-  ///
   /// Retorna Response<dynamic> de Dio - El usuario tiene acceso completo a:
-  /// - response.data (datos de la respuesta)
-  /// - response.statusCode (código HTTP)
-  /// - response.headers (headers de respuesta)
-  /// - response.statusMessage
   Future<T> deleteData<T>({
     required String endpoint,
     required T Function(Response<dynamic> response) converter,

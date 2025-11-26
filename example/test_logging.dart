@@ -17,24 +17,21 @@ void main() async {
   print('│ EJEMPLO 1: ApiClient con LoggingInterceptor            │');
   print('└─────────────────────────────────────────────────────────┘\n');
 
-  final apiClient = ApiClient(
-    baseUrl: 'https://jsonplaceholder.typicode.com',
-    interceptors: [
-      LoggingInterceptor(
-        logRequest: true,   // Mostrar requests
-        logResponse: true,  // Mostrar responses
-        logError: true,     // Mostrar errores
-      ),
-    ],
-  );
+  final dio1 = Dio(BaseOptions(baseUrl: 'https://jsonplaceholder.typicode.com'));
+  dio1.interceptors.add(LoggingInterceptor(
+    logRequest: true,   // Mostrar requests
+    logResponse: true,  // Mostrar responses
+    logError: true,     // Mostrar errores
+  ));
+
+  final apiClient = ApiClient(DioService(dioClient: dio1));
 
   try {
     print('➤ Haciendo GET a /posts/1...\n');
-    final response = await apiClient.get(endpoint: '/posts/1');
+    final post = await apiClient.get<Map<String, dynamic>>(endpoint: '/posts/1');
 
     print('\n✓ Respuesta recibida:');
-    print('  Status: ${response.statusCode}');
-    print('  Título: ${response.data['title']}\n');
+    print('  Título: ${post['title']}\n');
   } on CustomException catch (e) {
     print('✗ Error: ${e.message}');
   }
@@ -48,7 +45,7 @@ void main() async {
 
   try {
     print('➤ Haciendo POST a /posts con datos...\n');
-    final response = await apiClient.post(
+    final newPost = await apiClient.post<Map<String, dynamic>>(
       endpoint: '/posts',
       data: {
         'title': 'Ejemplo de Post',
@@ -58,8 +55,7 @@ void main() async {
     );
 
     print('\n✓ Post creado:');
-    print('  Status: ${response.statusCode}');
-    print('  ID: ${response.data['id']}\n');
+    print('  ID: ${newPost['id']}\n');
   } on CustomException catch (e) {
     print('✗ Error: ${e.message}');
   }
@@ -73,7 +69,7 @@ void main() async {
 
   try {
     print('➤ Haciendo GET a endpoint inexistente...\n');
-    await apiClient.get(endpoint: '/posts/99999');
+    await apiClient.get<Map<String, dynamic>>(endpoint: '/posts/99999');
   } on CustomException catch (e) {
     print('\n✓ Error capturado correctamente:');
     print('  Mensaje: ${e.message}');
@@ -128,24 +124,24 @@ void main() async {
   print('│ EJEMPLO 5: Con AuthInterceptor + LoggingInterceptor    │');
   print('└─────────────────────────────────────────────────────────┘\n');
 
-  final apiClientAuth = ApiClient(
-    baseUrl: 'https://jsonplaceholder.typicode.com',
-    interceptors: [
-      AuthInterceptor(token: 'mi_token_secreto_123', logAuthHeaders: false),
-      LoggingInterceptor(
-        logRequest: true,
-        logResponse: true,
-        logError: true,
-      ),
-    ],
-  );
+  final dioAuth = Dio(BaseOptions(baseUrl: 'https://jsonplaceholder.typicode.com'));
+  dioAuth.interceptors.addAll([
+    AuthInterceptor(token: 'mi_token_secreto_123', logAuthHeaders: false),
+    LoggingInterceptor(
+      logRequest: true,
+      logResponse: true,
+      logError: true,
+    ),
+  ]);
+
+  final apiClientAuth = ApiClient(DioService(dioClient: dioAuth));
 
   try {
     print('➤ Haciendo request con autenticación...\n');
-    final response = await apiClientAuth.get(endpoint: '/posts/3');
+    final post = await apiClientAuth.get<Map<String, dynamic>>(endpoint: '/posts/3');
 
     print('\n✓ Request autenticado:');
-    print('  Status: ${response.statusCode}');
+    print('  Título: ${post['title']}');
     print('  (El token fue añadido automáticamente)\n');
   } on CustomException catch (e) {
     print('✗ Error: ${e.message}');

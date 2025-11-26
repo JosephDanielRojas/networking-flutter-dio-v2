@@ -17,13 +17,12 @@ void main() async {
   print('│ EJEMPLO 1: Response con campo "message"                │');
   print('└─────────────────────────────────────────────────────────┘\n');
 
-  final apiClient = ApiClient(
-    baseUrl: 'https://jsonplaceholder.typicode.com',
-  );
+  final dio = Dio(BaseOptions(baseUrl: 'https://jsonplaceholder.typicode.com'));
+  final apiClient = ApiClient(DioService(dioClient: dio));
 
   try {
     print('➤ Intentando acceder a /posts/99999 (no existe)...\n');
-    await apiClient.get(endpoint: '/posts/99999');
+    await apiClient.get<Map<String, dynamic>>(endpoint: '/posts/99999');
   } on CustomException catch (e) {
     print('Response del servidor: {}');
     print('messageKeys buscados: [message, error, msg, detail]');
@@ -78,8 +77,9 @@ void main() async {
   print('│ EJEMPLO 4: messageKeys personalizado                   │');
   print('└─────────────────────────────────────────────────────────┘\n');
 
+  final dio2 = Dio(BaseOptions(baseUrl: 'https://api.example.com'));
   final apiClient2 = ApiClient(
-    baseUrl: 'https://api.example.com',
+    DioService(dioClient: dio2),
     messageKeys: ['errorDescription', 'message'],
   );
 

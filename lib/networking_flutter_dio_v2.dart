@@ -2,6 +2,7 @@ library networking_flutter_dio_v2;
 
 // Core Client
 export 'core/client/api_client.dart';
+export 'core/client/api_client_interface.dart';
 
 // Networking
 export 'core/networking/api_service.dart';
